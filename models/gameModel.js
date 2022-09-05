@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const gameSchema = new mongoose.Schema({
-    hostID: { type: String },
+    hostId: { type: String },
     pin: { type: Number },
     quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz'},
     gameStatus: { type: Boolean },

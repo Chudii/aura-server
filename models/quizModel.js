@@ -2,13 +2,17 @@ const mongoose = require('mongoose')
 
 const quizSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    timer: { type: Number, required: true },
     category: { type: String, required: true },
     questions: [
         { 
             question: {type: String}, 
-            answer: {type: String}, 
-            decoys: [String]
+            answers: {
+                a: String,
+                b: String,
+                c: String,
+                d: String
+            }, 
+            correct: {type: String}
         }
     ]
 }, { collection: 'quiz' })
