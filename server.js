@@ -50,10 +50,6 @@ io.on('connection', (socket) => {
 
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on('test', () => {
-        socket.emit('works', 'hello')
-    })
-
     socket.on('host_joined', quizId => {
         Quiz.findById(quizId, (err, quiz) => {
             if (err) console.log(err)
@@ -192,7 +188,7 @@ io.on('connection', (socket) => {
     socket.on('fetch_first_question', pin => {
         Promise.all([
             Game.findOne({ hostId: socket.id, pin: pin }).populate('quiz').exec(),
-            Player.countDocuments({ hostId: socket.id, pin: pin}).exec()
+            Player.countDocuments({ hostId: socket.id, pin: pin }).exec()
         ]).then(([game, count]) => {
             
             const numPlayers = count
@@ -222,7 +218,8 @@ io.on('connection', (socket) => {
 
         Promise.all([
             Player.findOne(filter).exec(),
-            Player.countDocuments({ game: gameId }).exec()
+            Player.countDocuments({ game: gameId }).exec(),
+            Game.findById({ _id: gameId }).populate('quiz').exec()
         ]).then(([player, count, game]) => {
 
             let numPlayers = count
@@ -268,7 +265,8 @@ io.on('connection', (socket) => {
 
                     if (g.playersAnswered === numPlayers) {
                         Promise.all([
-                            Game.findByIdAndUpdate({ _id: game._id }, { questionStatus: false }, { new: true }).exec()
+                            Game.findByIdAndUpdate({ _id: game._id }, { questionStatus: false }, { new: true }).exec(),
+                            Player.find({ game: gameId })
                         ]).then(([game, players]) => {
                             
                             let answeredA = 0
@@ -332,7 +330,7 @@ io.on('connection', (socket) => {
         const updatePlayers = { lastCorrect: false, streak: 0 }
 
         Promise.all([
-            Player.updateMany(filterPlayers, updatedPlayers).exec(),
+            Player.updateMany(filterPlayers, updatePlayers).exec(),
             Game.findOneAndUpdate(filter, update, { new: true }).populate('quiz').exec()
         ]).then(([count, game]) => {
 
@@ -458,7 +456,7 @@ io.on('connection', (socket) => {
 
             const numQuestions = game.quiz.questions.length
 
-            if (question <= numQuestions)  {
+            if (questionNumber <= numQuestions)  {
 
                 const nextQuestionHost = {
                     questionNumber: game.questionNumber,
