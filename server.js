@@ -27,11 +27,13 @@ db.on('error', err => console.log(err.message + ' is Mongod not running?'))
 db.on('disconnected', () => console.log('mongo disconnected'))
 
 const server = http.createServer(app)
-const io = new Server(server, {
+const io = new Server(server, 
+    {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "https://aura-quiz-server.herokuapp.com"
     }
-})
+}
+)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
