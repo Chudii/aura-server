@@ -503,7 +503,7 @@ io.on('connection', (socket) => {
         const filter = { hostId: socket.id, pin: pin }
 
         Promise.all([
-            Game.findByIdAndUpdate(filter, { gameStatus: false }, { new: true }).populate('quiz').exec(),
+            Game.findOneAndUpdate(filter, { gameStatus: false }, { new: true }).populate('quiz').exec(),
             Player.find(filter).exec()
         ]).then(([game, players]) => {
 
