@@ -44,9 +44,6 @@ app.use('/quizzes', quizRouter)
 app.use('/games', gameRouter)
 app.use('/players', playerRouter)
 
-server.listen(port, () => {
-    console.log(`*** Listening on http://localhost:${port} ***`)
-})
 
 io.on('connection', (socket) => {
 
@@ -589,4 +586,6 @@ io.on('connection', (socket) => {
 
 })
 
- 
+server.listen(port, () => {
+    console.log(`*** Listening on http://localhost:${port} ***`)
+})
